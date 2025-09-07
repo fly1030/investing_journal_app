@@ -471,22 +471,40 @@ export const getPerformanceStats = (dailyData) => {
     };
   }
 
-  const totalTrades = dailyData.reduce((sum, day) => sum + day.tradeCount, 0);
-  const totalPnL = dailyData.reduce((sum, day) => sum + day.totalPnL, 0);
-  const winDays = dailyData.filter((day) => day.isWin).length;
-  const winRate = dailyData.length > 0 ? (winDays / dailyData.length) * 100 : 0;
+  // Filter out future days - only include days with actual trading data
+  const today = new Date();
+  const pastDays = dailyData.filter((day) => {
+    const dayDate = day.date instanceof Date ? day.date : new Date(day.date);
+    return dayDate <= today && day.tradeCount > 0; // Only include days with actual trades
+  });
 
-  const bestDay = dailyData.reduce(
+  if (pastDays.length === 0) {
+    return {
+      totalTrades: 0,
+      totalPnL: 0,
+      winRate: 0,
+      bestDay: null,
+      worstDay: null,
+      avgDailyPnL: 0,
+    };
+  }
+
+  const totalTrades = pastDays.reduce((sum, day) => sum + day.tradeCount, 0);
+  const totalPnL = pastDays.reduce((sum, day) => sum + day.totalPnL, 0);
+  const winDays = pastDays.filter((day) => day.isWin).length;
+  const winRate = pastDays.length > 0 ? (winDays / pastDays.length) * 100 : 0;
+
+  const bestDay = pastDays.reduce(
     (best, day) => (day.totalPnL > best.totalPnL ? day : best),
-    dailyData[0]
+    pastDays[0]
   );
 
-  const worstDay = dailyData.reduce(
+  const worstDay = pastDays.reduce(
     (worst, day) => (day.totalPnL < worst.totalPnL ? day : worst),
-    dailyData[0]
+    pastDays[0]
   );
 
-  const avgDailyPnL = dailyData.length > 0 ? totalPnL / dailyData.length : 0;
+  const avgDailyPnL = pastDays.length > 0 ? totalPnL / pastDays.length : 0;
 
   return {
     totalTrades,
