@@ -7,6 +7,7 @@ import "react-calendar/dist/Calendar.css";
 const TradingCalendar = ({ dailyData, onSaveJournal }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDayData, setSelectedDayData] = useState(null);
 
   // Create a map of dates to daily data for quick lookup
   const dailyDataMap = {};
@@ -153,6 +154,7 @@ const TradingCalendar = ({ dailyData, onSaveJournal }) => {
             
             // Always open modal, create default data if none exists
             if (dayData) {
+              setSelectedDayData(dayData);
               setIsModalOpen(true);
             } else {
               // Create a default dayData object for days without trading data
@@ -198,10 +200,11 @@ const TradingCalendar = ({ dailyData, onSaveJournal }) => {
 
       <TradingDayModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        dayData={
-          selectedDate ? dailyDataMap[format(selectedDate, "yyyy-MM-dd")] : null
-        }
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedDayData(null);
+        }}
+        dayData={selectedDayData}
         onSaveJournal={onSaveJournal}
       />
 

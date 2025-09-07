@@ -188,8 +188,10 @@ function App() {
 
         // Update the daily data with the journal entry
         let updatedDailyData;
-        const existingDayIndex = dailyData.findIndex(day => day.dateString === dateString);
-        
+        const existingDayIndex = dailyData.findIndex(
+          (day) => day.dateString === dateString
+        );
+
         if (existingDayIndex >= 0) {
           // Update existing day data
           updatedDailyData = dailyData.map((day) =>
@@ -201,7 +203,11 @@ function App() {
           // Create new day data for journal-only entries
           const [year, month, dayNum] = dateString.split("-");
           const newDayData = {
-            date: new Date(parseInt(year), parseInt(month) - 1, parseInt(dayNum)),
+            date: new Date(
+              parseInt(year),
+              parseInt(month) - 1,
+              parseInt(dayNum)
+            ),
             dateString: dateString,
             totalPnL: 0,
             totalCommission: 0,
@@ -218,7 +224,7 @@ function App() {
             isLoss: false,
             isNeutral: true,
             performance: 0,
-            journal: journalEntry
+            journal: journalEntry,
           };
           updatedDailyData = [...dailyData, newDayData];
         }
