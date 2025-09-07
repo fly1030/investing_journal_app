@@ -150,7 +150,33 @@ const TradingCalendar = ({ dailyData, onSaveJournal }) => {
             setSelectedDate(date);
             const dateString = format(date, "yyyy-MM-dd");
             const dayData = dailyDataMap[dateString];
+            
+            // Always open modal, create default data if none exists
             if (dayData) {
+              setIsModalOpen(true);
+            } else {
+              // Create a default dayData object for days without trading data
+              const defaultDayData = {
+                date: date,
+                dateString: dateString,
+                totalPnL: 0,
+                totalCommission: 0,
+                totalClearingFee: 0,
+                totalExchangeFee: 0,
+                totalFees: 0,
+                totalValue: 0,
+                tradeCount: 0,
+                transactionCount: 0,
+                winCount: 0,
+                lossCount: 0,
+                neutralCount: 0,
+                isWin: false,
+                isLoss: false,
+                isNeutral: true,
+                performance: 0,
+                journal: "" // Empty journal for new entries
+              };
+              setSelectedDayData(defaultDayData);
               setIsModalOpen(true);
             }
           }}

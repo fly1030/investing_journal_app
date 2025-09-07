@@ -88,15 +88,16 @@ const TradingDayModal = ({ isOpen, onClose, dayData, onSaveJournal }) => {
           </button>
         </div>
 
-        {/* Trading Stats */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: "16px",
-            marginBottom: "24px",
-          }}
-        >
+        {/* Trading Stats - Only show if there are actual trades */}
+        {(dayData.tradeCount > 0 || dayData.transactionCount > 0) && (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: "16px",
+              marginBottom: "24px",
+            }}
+          >
           <div
             style={{
               padding: "16px",
@@ -217,16 +218,51 @@ const TradingDayModal = ({ isOpen, onClose, dayData, onSaveJournal }) => {
             </div>
           </div>
         </div>
+        )}
 
-        {/* Additional Stats */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: "16px",
-            marginBottom: "24px",
-          }}
-        >
+        {/* Show message for days without trading data */}
+        {dayData.tradeCount === 0 && dayData.transactionCount === 0 && (
+          <div
+            style={{
+              padding: "20px",
+              backgroundColor: "#f8fafc",
+              borderRadius: "8px",
+              border: "1px solid #e5e7eb",
+              marginBottom: "24px",
+              textAlign: "center",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "16px",
+                color: "#6b7280",
+                fontWeight: "500",
+                marginBottom: "8px",
+              }}
+            >
+              No trading data for this day
+            </div>
+            <div
+              style={{
+                fontSize: "14px",
+                color: "#9ca3af",
+              }}
+            >
+              You can still add a journal entry below
+            </div>
+          </div>
+        )}
+
+        {/* Additional Stats - Only show if there are actual trades */}
+        {(dayData.tradeCount > 0 || dayData.transactionCount > 0) && (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: "16px",
+              marginBottom: "24px",
+            }}
+          >
           <div
             style={{
               padding: "12px",
@@ -269,6 +305,7 @@ const TradingDayModal = ({ isOpen, onClose, dayData, onSaveJournal }) => {
             </div>
           </div>
         </div>
+        )}
 
         {/* Journal Section */}
         <div

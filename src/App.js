@@ -187,11 +187,41 @@ function App() {
         );
 
         // Update the daily data with the journal entry
-        const updatedDailyData = dailyData.map((day) =>
-          day.dateString === dateString
-            ? { ...day, journal: journalEntry }
-            : day
-        );
+        let updatedDailyData;
+        const existingDayIndex = dailyData.findIndex(day => day.dateString === dateString);
+        
+        if (existingDayIndex >= 0) {
+          // Update existing day data
+          updatedDailyData = dailyData.map((day) =>
+            day.dateString === dateString
+              ? { ...day, journal: journalEntry }
+              : day
+          );
+        } else {
+          // Create new day data for journal-only entries
+          const [year, month, dayNum] = dateString.split("-");
+          const newDayData = {
+            date: new Date(parseInt(year), parseInt(month) - 1, parseInt(dayNum)),
+            dateString: dateString,
+            totalPnL: 0,
+            totalCommission: 0,
+            totalClearingFee: 0,
+            totalExchangeFee: 0,
+            totalFees: 0,
+            totalValue: 0,
+            tradeCount: 0,
+            transactionCount: 0,
+            winCount: 0,
+            lossCount: 0,
+            neutralCount: 0,
+            isWin: false,
+            isLoss: false,
+            isNeutral: true,
+            performance: 0,
+            journal: journalEntry
+          };
+          updatedDailyData = [...dailyData, newDayData];
+        }
 
         setDailyData(updatedDailyData);
 
